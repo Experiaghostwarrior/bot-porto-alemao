@@ -28,11 +28,16 @@ app.post('/webhook', async (req, res) => {
             }
 
             if (userText) {
-                console.log(`[WhatsApp In] Recebido: ${userText}`);
+                console.log(`[WhatsApp In] Recebido de ${body.data.key.remoteJid}: ${userText}`);
                 const remoteJid = body.data.key.remoteJid;
                 
-                // Processa na Groq API
-                const botResponse = await handleIncomingMessage(userText, remoteJid);
+                // Valida se o remetente é o número pessoal do Rogério (Sócio) usando a variável do .env
+                // O número chega no formato 5511999999999@s.whatsapp.net
+                const rogerioPhone = process.env.ROGERIO_PHONE_NUMBER + '@s.whatsapp.net';
+                const isBoss = (remoteJid === rogerioPhone);
+                
+                // Processa na Groq API enviando a flag isBoss para o roteamento
+                const botResponse = await handleIncomingMessage(userText, remoteJid, isBoss);
                 
                 // Responde no WhatsApp
                 await sendMessage(remoteJid, botResponse);
