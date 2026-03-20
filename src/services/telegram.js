@@ -4,6 +4,14 @@ const fs = require('fs');
 const os = require('os');
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
+
+// FINDING 4: Guard — se o token não existir, não crashar o servidor inteiro
+if (!token) {
+    console.warn('⚠️ TELEGRAM_BOT_TOKEN não definido. Sócio Digital (Telegram) DESATIVADO.');
+    module.exports = null;
+    return;
+}
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const bot = new TelegramBot(token, { polling: true });
 
