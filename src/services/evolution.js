@@ -1,19 +1,23 @@
-// integration for Evolution API
-
 const axios = require('axios');
 
-const EVOLUTION_API_URL = 'https://api.example.com/evolution'; // Replace with actual API URL
+async function sendMessage(to, text) {
+    const defaultHeaders = {
+        'apikey': process.env.EVOLUTION_GLOBAL_APIKEY,
+        'Content-Type': 'application/json'
+    };
 
-const getEvolutionData = async (id) => {
+    const instanceName = process.env.INSTANCE_NAME;
+    const url = `${process.env.EVOLUTION_API_URL}/message/sendText/${instanceName}`;
+
     try {
-        const response = await axios.get(`${EVOLUTION_API_URL}/${id}`);
-        return response.data;
+        await axios.post(url, {
+            number: to,
+            textMessage: { text }
+        }, { headers: defaultHeaders });
+        console.log(`[WhatsApp Out] Enviado para ${to}`);
     } catch (error) {
-        console.error('Error fetching evolution data:', error);
-        throw error;
+        console.error(`Erro ao disparar mensagem Evolution para ${to}:`, error.message);
     }
-};
+}
 
-module.exports = {
-    getEvolutionData,
-};
+module.exports = { sendMessage };
