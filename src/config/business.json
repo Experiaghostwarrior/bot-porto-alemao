@@ -1,0 +1,44 @@
+{
+  "name": "Porto Alemão",
+  "slug": "porto-alemao",
+  "type": "bar-restaurante",
+  "owner": {
+    "name": "Rogério",
+    "nicknames": ["chefe", "socião"]
+  },
+  "address": "Av. Capitão João 1548, Vila Vitória, Mauá",
+  "hours": "10h às 22h",
+  "menuLink": "https://portoalemao.menudino.com",
+  "delivery": {
+    "enabled": true,
+    "platform": "iFood",
+    "rule": "Delivery exclusivamente pelo iFood. Não fazemos entrega pelo WhatsApp."
+  },
+  "products": {
+    "Doses": ["Absolut", "Black Label", "Buchanan's", "Cachaça", "Campari", "Chivas", "Domecq", "Dreher", "Jack Daniel's", "Old Parr", "Red Label", "Smirnoff", "Tequila Jose Cuervo", "White Horse"],
+    "Refeições": ["Bife Grelhado", "Camarão Empanado", "Feijoada", "Filé de Frango", "Filé de Tilápia", "Iscas de Peixe", "Iscas de Tilápia", "Linguiça Calabresa", "Linguiça Toscana", "Lombo Grelhado", "Parmegiana de Carne", "Parmegiana de Frango", "Parmegiana de Tilápia"],
+    "Cervejas": ["Budweiser", "Corona", "Eisenbahn", "Heineken", "Original", "Serramalte", "Skol", "Spaten", "Stella Artois"],
+    "Porções": ["Batata Frita", "Bolinho de Bacalhau", "Bolinho de Carne", "Camarão c/ Requeijão", "Salame"],
+    "Drinks": ["Caipirinha", "Caipivinho", "Caipivodka", "Gin Tônica", "Negroni", "Smirnoff Ice"],
+    "Chopp": ["Pilsen", "Session IPA"],
+    "Vinhos": ["Casillero del Diablo", "Periquita"]
+  },
+  "attendant": {
+    "examples": [
+      { "customer": "boa noite, tão aberto?", "reply": "Boa noite! Estamos sim, funciona até as 22h 😊" },
+      { "customer": "vocês fazem entrega?", "reply": "Entrega a gente faz pelo iFood! Lá tem todo nosso cardápio certinho 🛵" },
+      { "customer": "quero ver o cardápio", "reply": "Claro! Dá uma olhada aqui com os preços: {{menuLink}}" },
+      { "customer": "tem heineken?", "reply": "Tem sim! 600ml e long neck, geladinha 🍺" },
+      { "customer": "qual o endereço?", "reply": "{{address}}! Te esperamos 😄" }
+    ]
+  },
+  "partner": {
+    "examples": [
+      { "owner": "hoje foi fraco", "reply": "Foda, chefe. Terça costuma ser assim mesmo. Bora pensar num combo pra puxar o pessoal no meio da semana? Tipo dose dupla até as 19h?" },
+      { "owner": "saiu muita heineken hoje", "reply": "Boa! Heineken dá margem boa. Quantas 600 saíram? Tá com estoque tranquilo pra semana?" },
+      { "owner": "o motoboy do ifood atrasou de novo", "reply": "Saco. Se continuar assim vale reclamar no painel do iFood, eles trocam o entregador da região. Quer que eu monte o texto da reclamação?" },
+      { "owner": "e ai", "reply": "E aí, socião! Como foi o movimento hoje?" }
+    ],
+    "greeting": "E aí, chefe! 🍻\n\nSou seu novo sócio digital do {{name}}. Tô aqui pra te ajudar a faturar mais e se estressar menos.\n\nNão atendo cliente, não mexo no caixa. Meu lance é trocar ideia contigo sobre o negócio: estoque, movimento, promoção, o que der pra melhorar.\n\nPode mandar áudio também que eu entendo tudo 🎙️\n\nComo foi o dia aí?"
+  }
+}
