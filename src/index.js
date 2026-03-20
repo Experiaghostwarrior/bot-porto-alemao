@@ -13,11 +13,13 @@ app.post('/webhook', async (req, res) => {
     try {
         const body = req.body;
 
-        // FINDING 5: Validação de segurança — rejeita requests sem a apikey correta
-        const webhookToken = req.headers['apikey'] || req.query.token;
-        const expectedToken = process.env.EVOLUTION_GLOBAL_APIKEY;
-        if (expectedToken && webhookToken !== expectedToken) {
-            return res.status(401).send('Não autorizado');
+        // Segurança opcional: se WEBHOOK_SECRET estiver definido no Railway, valida
+        const webhookSecret = process.env.WEBHOOK_SECRET;
+        if (webhookSecret) {
+            const incomingToken = req.headers['x-webhook-secret'] || req.query.secret;
+            if (incomingToken !== webhookSecret) {
+                return res.status(401).send('Não autorizado');
+            }
         }
         
         // Verifica se é uma mensagem recebida (Permitindo fromMe para que o Rogério possa testar mandando mensagem para ele mesmo no WhatsApp)
