@@ -21,7 +21,7 @@ async function handleIncomingMessage(userMessage, userId) {
     try {
         const chatCompletion = await groq.chat.completions.create({
             messages: conversationMemory[userId],
-            model: "llama3-8b-8192", // Modelo hiper rápido para conversas dinâmicas
+            model: "llama-3.1-8b-instant", // Modelo hyper rápido para conversas dinâmicas
             temperature: 0.7,
             max_tokens: 500
         });
