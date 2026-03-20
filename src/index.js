@@ -3,6 +3,7 @@ const express = require('express');
 const cron = require('node-cron');
 const { handleIncomingMessage } = require('./services/groq');
 const { sendMessage } = require('./services/evolution');
+require('./services/telegram'); // Inicializa o Sócio Digital (Telegram) em background
 
 const app = express();
 app.use(express.json());
