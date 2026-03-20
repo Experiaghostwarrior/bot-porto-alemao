@@ -14,12 +14,21 @@ async function sendMessage(to, text) {
         baseUrl = 'https://' + baseUrl;
     }
     
+    // Limpeza de barras duplas // na junção da URL
+    baseUrl = baseUrl.replace(/\/+$/, '');
     const url = `${baseUrl}/message/sendText/${instanceName}`;
+
+    // A Evolution API V2 funciona melhor se limparmos o @s.whatsapp.net do número
+    const cleanNumber = to.split('@')[0];
 
     try {
         await axios.post(url, {
-            number: to,
-            textMessage: { text }
+            number: cleanNumber,
+            text: text, // Evolution V2 padrão
+            options: {
+                delay: 1000,
+                presence: "composing"
+            }
         }, { headers: defaultHeaders });
         console.log(`[WhatsApp Out] Enviado para ${to}`);
     } catch (error) {
