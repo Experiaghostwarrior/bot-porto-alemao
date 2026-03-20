@@ -94,17 +94,25 @@ bot.on('voice', async (msg) => {
     const loadingMsg = await bot.sendMessage(chatId, "🎙️ *Ouvindo seu áudio...*", { parse_mode: 'Markdown' });
 
     try {
-        // Baixa o arquivo do Telegram (Ogg)
+        // Baixa o arquivo do Telegram (normalmente vem sem extensão ou como .oga)
         const filePath = await bot.downloadFile(msg.voice.file_id, os.tmpdir());
+        
+        // A API de áudio da OpenAI/Groq exige um stream de leitura com uma extensão válida para deduzir o MIME type.
+        // Vamos renomear para .ogg temporariamente
+        const newFilePath = filePath + '.ogg';
+        fs.renameSync(filePath, newFilePath);
         
         // Joga no Groq Whisper API
         const transcription = await groq.audio.transcriptions.create({
-            file: fs.createReadStream(filePath),
-            model: 'whisper-large-v3',
+            file: fs.createReadStream(newFilePath),
+            model: 'whisper-large-v3-turbo', // Usando o modelo turbo que é ainda mais rápido
+            language: 'pt',
+            response_format: 'json'
         });
         
         // Remove arquivo local
-        fs.unlinkSync(filePath);
+        if (fs.existsSync(newFilePath)) fs.unlinkSync(newFilePath);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath); // Garantia dupla
 
         const textoTranscrito = transcription.text;
         console.log(`[Transcreveu]: ${textoTranscrito}`);
@@ -115,9 +123,9 @@ bot.on('voice', async (msg) => {
         await processMessage(chatId, textoTranscrito, true);
 
     } catch (err) {
-        console.error("Erro no Whisper:", err.message);
+        console.error("Erro no Whisper:", err);
         bot.deleteMessage(chatId, loadingMsg.message_id).catch(()=>{});
-        bot.sendMessage(chatId, "Chefe, falhou a audição do áudio. Consegue escrever?");
+        bot.sendMessage(chatId, "Chefe, a groq rejeitou o formato de áudio. Tenta escrever por enquanto!");
     }
 });
 
