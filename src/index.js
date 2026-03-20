@@ -12,8 +12,8 @@ app.post('/webhook', async (req, res) => {
     try {
         const body = req.body;
         
-        // Verifica se é uma mensagem recebida e ignora a própria mensagem do bot
-        if (body.event === 'messages.upsert' && !body.data.key.fromMe) {
+        // Verifica se é uma mensagem recebida (Permitindo fromMe para que o Rogério possa testar mandando mensagem para ele mesmo no WhatsApp)
+        if (body.event === 'messages.upsert') {
             const messageData = body.data.message;
             let userText = '';
 
