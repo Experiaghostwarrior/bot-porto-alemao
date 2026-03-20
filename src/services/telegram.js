@@ -137,6 +137,21 @@ bot.on('voice', async (msg) => {
     }
 });
 
+// Tratamento do erro 409 Conflict (Railway redeploy com duas instâncias simultâneas)
+bot.on('polling_error', (error) => {
+    if (error.code === 'ETELEGRAM' && error.message.includes('409')) {
+        console.warn('[Telegram] Conflito de polling (redeploy em andamento). Ignorando...');
+    } else {
+        console.error('[Telegram] Erro de polling:', error.message);
+    }
+});
+
+// Graceful shutdown — para o polling antes do Railway matar o processo
+process.on('SIGTERM', () => {
+    console.log('[Telegram] SIGTERM recebido. Parando polling...');
+    bot.stopPolling();
+});
+
 console.log('🤖 Telegram Sócio Digital V2 (Whisper + Llama 3.1) Inicializado!');
 
 module.exports = bot;
