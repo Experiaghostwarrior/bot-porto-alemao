@@ -1,5 +1,5 @@
 const Groq = require('groq-sdk');
-const { socioPrompt, clientePrompt } = require('../prompts/systemPrompt');
+const { systemPrompt } = require('../prompts/systemPrompt');
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
@@ -8,13 +8,10 @@ const groq = new Groq({
 // Mock simples em disco para armazenar o contexto da conversa (MVP)
 const conversationMemory = {};
 
-async function handleIncomingMessage(userMessage, userId, isBoss) {
+async function handleIncomingMessage(userMessage, userId) {
     if (!conversationMemory[userId]) {
-        // Se isBoss for true, injeta o Prompt de Sócio/Gerente. Se for false, injeta o de Cliente.
-        const currentPrompt = isBoss ? socioPrompt : clientePrompt;
-        
         conversationMemory[userId] = [
-            { role: "system", content: currentPrompt }
+            { role: "system", content: systemPrompt }
         ];
     }
 
