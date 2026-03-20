@@ -40,8 +40,8 @@ async function handleIncomingMessage(userMessage, userId) {
 
         return resposta;
     } catch (error) {
-        console.error("Erro na comunicação com a Groq (LLM):", error);
-        return "Opa Rogério, meu motor do KAIROS teve um engasgo de conexão. Pode repetir?";
+        console.error("Erro na comunicação com a Groq (LLM):", error.message || error);
+        return "Desculpe, estou com uma instabilidade momentânea. Pode repetir sua mensagem em alguns segundos? 🙏";
     }
 }
 
