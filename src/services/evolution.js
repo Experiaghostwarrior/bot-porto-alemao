@@ -6,8 +6,15 @@ async function sendMessage(to, text) {
         'Content-Type': 'application/json'
     };
 
-    const instanceName = process.env.INSTANCE_NAME;
-    const url = `${process.env.EVOLUTION_API_URL}/message/sendText/${instanceName}`;
+    const instanceName = process.env.INSTANCE_NAME ? process.env.INSTANCE_NAME.trim() : 'porto-alemao';
+    let baseUrl = process.env.EVOLUTION_API_URL ? process.env.EVOLUTION_API_URL.trim() : '';
+    
+    // Construtor automático de protocolo HTTPs caso falte no Railway ENV
+    if (baseUrl && !baseUrl.startsWith('http')) {
+        baseUrl = 'https://' + baseUrl;
+    }
+    
+    const url = `${baseUrl}/message/sendText/${instanceName}`;
 
     try {
         await axios.post(url, {
