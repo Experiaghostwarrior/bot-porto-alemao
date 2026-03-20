@@ -21,9 +21,9 @@ async function handleIncomingMessage(userMessage, userId) {
     try {
         const chatCompletion = await groq.chat.completions.create({
             messages: conversationMemory[userId],
-            model: "llama-3.1-8b-instant", // Modelo hyper rápido para conversas dinâmicas
-            temperature: 0.7,
-            max_tokens: 500
+            model: "llama-3.1-8b-instant",
+            temperature: 0.8,  // Mais variação natural
+            max_tokens: 150    // Força respostas curtas de WhatsApp
         });
 
         const resposta = chatCompletion.choices[0].message.content;
