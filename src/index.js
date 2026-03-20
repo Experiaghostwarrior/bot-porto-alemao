@@ -3,15 +3,22 @@ const express = require('express');
 const cron = require('node-cron');
 const { handleIncomingMessage } = require('./services/groq');
 const { sendMessage } = require('./services/evolution');
-require('./services/telegram'); // Inicializa o Sócio Digital (Telegram) em background
+const telegramBot = require('./services/telegram'); // Inicializa o Sócio Digital (Telegram) em background
 
 const app = express();
 app.use(express.json());
 
-// Webhook endpoint: A Evolution API fará o POST aqui quando o Rogério enviar mensagem
+// Webhook endpoint: A Evolution API fará o POST aqui
 app.post('/webhook', async (req, res) => {
     try {
         const body = req.body;
+
+        // FINDING 5: Validação de segurança — rejeita requests sem a apikey correta
+        const webhookToken = req.headers['apikey'] || req.query.token;
+        const expectedToken = process.env.EVOLUTION_GLOBAL_APIKEY;
+        if (expectedToken && webhookToken !== expectedToken) {
+            return res.status(401).send('Não autorizado');
+        }
         
         // Verifica se é uma mensagem recebida (Permitindo fromMe para que o Rogério possa testar mandando mensagem para ele mesmo no WhatsApp)
         if (body.event === 'messages.upsert') {
@@ -47,12 +54,18 @@ app.post('/webhook', async (req, res) => {
 });
 
 // Pushes Proativos (Schedulers - Cron Jobs)
-// Executa todos os dias às 23:45 
+// Executa todos os dias às 23:45 — MIGRADO PARA TELEGRAM (Finding 3)
 cron.schedule('45 23 * * *', async () => {
-    console.log('[CRON] Iniciando rotina de fechamento...');
-    const rogerioPhone = process.env.ROGERIO_PHONE_NUMBER + '@s.whatsapp.net';
-    const notificacao = "Mestre Rogério! Tudo certo para o fechamento de hoje? Tivemos algum gargalo ou alguma falta de estoque no balcão de última hora?";
-    await sendMessage(rogerioPhone, notificacao);
+    console.log('[CRON] Iniciando rotina de fechamento via Telegram...');
+    const rogerioTelegramId = process.env.TELEGRAM_ROGERIO_ID;
+    if (rogerioTelegramId && telegramBot) {
+        const notificacao = "Chefe, fechamento! Como foi o movimento hoje? Faltou alguma coisa no estoque? 📊";
+        telegramBot.sendMessage(rogerioTelegramId, notificacao).catch(err => {
+            console.error('[CRON] Falha ao notificar via Telegram:', err.message);
+        });
+    } else {
+        console.warn('[CRON] TELEGRAM_ROGERIO_ID não configurado. Pulando notificação.');
+    }
 });
 
 const PORT = process.env.PORT || 3000;
